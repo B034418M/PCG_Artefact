@@ -19,6 +19,7 @@ void APCGLandscapeSettings::UpdateLandscapeSplineMeshes()
 {
 	if(!_Landscape) {UE_LOG(LogTemp, Warning, TEXT("NO LANDSCAPE")); return;}
 
+	// BREAKS THE LANDSCAPE!!
 	//_Landscape->PreEditUndo();
 
 	_SplineSegments.Empty();
