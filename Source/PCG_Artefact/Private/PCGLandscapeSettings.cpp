@@ -11,7 +11,7 @@ APCGLandscapeSettings::APCGLandscapeSettings()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+	
 }
 
 #if WITH_EDITOR
@@ -44,22 +44,35 @@ void APCGLandscapeSettings::UpdateLandscapeSplineMeshes()
 		if(!_ShowLCurb && !_ShowRCurb)
 		{
 			LandscapeSplineSegment->SplineMeshes.Add(CreateMeshEntry(_RoadMesh));
+			LandscapeSplineSegment->PostEditChange();
 		}
 		else if(_ShowLCurb && !_ShowRCurb)
 		{
 			LandscapeSplineSegment->SplineMeshes.Add(CreateMeshEntry(_RoadMeshL));
+			LandscapeSplineSegment->PostEditChange();
 		}
 		else if(!_ShowLCurb && _ShowRCurb)
 		{
 			LandscapeSplineSegment->SplineMeshes.Add(CreateMeshEntry(_RoadMeshR));
+			LandscapeSplineSegment->PostEditChange();
 		}
 		else if(_ShowLCurb && _ShowRCurb)
 		{
 			LandscapeSplineSegment->SplineMeshes.Add(CreateMeshEntry(_RoadMeshLR));
+			LandscapeSplineSegment->PostEditChange();
 		}
 	}
-	
+
+	FTimerHandle CallPostEditMove;
+
+	GetWorld()->GetTimerManager().SetTimer(CallPostEditMove, this, &APCGLandscapeSettings::CallPostEditMove, 0.5f, false);
+}
+
+void APCGLandscapeSettings::CallPostEditMove()
+{
 	_Landscape->PostEditMove(true);
+
+	UE_LOG(LogTemp, Warning, TEXT("UPDATING"));
 }
 
 FLandscapeSplineMeshEntry APCGLandscapeSettings::CreateMeshEntry(UStaticMesh* Mesh)
@@ -68,6 +81,9 @@ FLandscapeSplineMeshEntry APCGLandscapeSettings::CreateMeshEntry(UStaticMesh* Me
 
 	// Change other data here!
 	data.Mesh = Mesh;
+	//data.Scale =
+	//data.CenterAdjust =
+	// etc
 	
 	return data;
 }
