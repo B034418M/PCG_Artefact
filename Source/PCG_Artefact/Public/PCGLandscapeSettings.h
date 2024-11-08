@@ -41,10 +41,13 @@ protected:
 	bool _ShowRCurb;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spline Component | Settings")
-	FVector _LamppostGap;
+	bool _ShowPropsWithoutCurb;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spline Component | Settings", meta=(EditCondition="_ShowPropsWithoutCurb"))
+	int _CurbPropZOffset;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spline Component | Settings")
-	int _CurbZOffset;
+	FVector _PropGap;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spline Component | Setup")
 	TObjectPtr<UStaticMesh> _RoadMesh;

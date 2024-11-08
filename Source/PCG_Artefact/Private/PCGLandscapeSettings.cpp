@@ -37,6 +37,7 @@ void APCGLandscapeSettings::UpdateLandscapeSplineMeshes()
 		}
 	}
 
+	// if has more than 2 connections, dont change so that can add not so modular junctions :)
 	for (auto LandscapeSplineSegment : _SplineSegments)
 	{
 		LandscapeSplineSegment->SplineMeshes.Empty();
