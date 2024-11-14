@@ -49,6 +49,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spline Component | Settings")
 	FVector _PropGap;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spline Component | Settings")
+	bool _HasForest;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spline Component | Setup")
 	TObjectPtr<UStaticMesh> _RoadMesh;
 	
