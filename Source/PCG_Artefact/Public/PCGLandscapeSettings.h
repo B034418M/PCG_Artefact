@@ -6,8 +6,15 @@
 #include "GameFramework/Actor.h"
 #include "PCGLandscapeSettings.generated.h"
 
+
+
 class ALandscape;
-class ULandscapeSplineSegment;class ULandscapeComponent;
+class ULandscapeSplineSegment;
+class ULandscapeComponent;
+class UPCGMeshSelectorWeighted;
+class APCGVolume;
+
+struct FPCGMeshSelectorWeightedEntry;
 
 UCLASS()
 class PCG_ARTEFACT_API APCGLandscapeSettings : public AActor
@@ -20,6 +27,9 @@ public:
 
 	UFUNCTION(CallInEditor, Category = "Spline Component")
 	void UpdateLandscapeSplineMeshes();
+
+	UFUNCTION(CallInEditor, Category = "Spline Component")
+	void UpdateForestMeshes();
 
 	UFUNCTION()
 	void CallPostEditMove();
@@ -63,12 +73,25 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spline Component | Setup")
 	TObjectPtr<UStaticMesh> _RoadMeshLR;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spline Component | Setup")
+	TArray<TSoftObjectPtr<UStaticMesh>> _TreeMeshes;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spline Component | Setup")
 	TObjectPtr<ALandscape> _Landscape;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Spline Component | Setup")
 	TArray<TObjectPtr<ULandscapeSplineSegment>> _SplineSegments;
+	
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category= "Spline Component | Setup")
+	TObjectPtr<APCGVolume> _PCGVolume;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TArray<FPCGMeshSelectorWeightedEntry> MeshEntries;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spline Component | Setup")
+	TSoftObjectPtr<UStaticMesh> _Mesh;
+	
 
 public:	
 	// Called every frame

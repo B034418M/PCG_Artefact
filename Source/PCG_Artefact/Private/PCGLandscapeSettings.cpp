@@ -2,16 +2,19 @@
 
 
 #include "PCGLandscapeSettings.h"
+#include "PCGLandscapeSettings.h"
 
 #include "Landscape.h"
 #include "LandscapeSplineSegment.h"
+#include "PCGVolume.h"
+#include "MeshSelectors/PCGMeshSelectorWeighted.h"
+
 
 // Sets default values
 APCGLandscapeSettings::APCGLandscapeSettings()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	
 }
 
 #if WITH_EDITOR
@@ -67,6 +70,18 @@ void APCGLandscapeSettings::UpdateLandscapeSplineMeshes()
 	FTimerHandle CallPostEditMove;
 
 	GetWorld()->GetTimerManager().SetTimer(CallPostEditMove, this, &APCGLandscapeSettings::CallPostEditMove, 0.5f, false);
+}
+
+void APCGLandscapeSettings::UpdateForestMeshes()
+{
+	MeshEntries.Empty();
+	for (int i = 0; i < _TreeMeshes.Num(); ++i)
+	{
+		MeshEntries.Add(FPCGMeshSelectorWeightedEntry(_TreeMeshes[i], 1));
+		UE_LOG(LogTemp, Warning, TEXT("adding %s"), *MeshEntries[i].DisplayName.ToString());
+	}
+
+	//_PCGVolume->PCGComponent.
 }
 
 void APCGLandscapeSettings::CallPostEditMove()
