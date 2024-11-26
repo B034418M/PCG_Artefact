@@ -17,16 +17,17 @@ APCGLandscapeSettings::APCGLandscapeSettings()
 	PrimaryActorTick.bCanEverTick = true;
 }
 
+// Check if called in editor
 #if WITH_EDITOR
 void APCGLandscapeSettings::UpdateLandscapeSplineMeshes()
 {
+	// Safety Check
 	if(!_Landscape) {UE_LOG(LogTemp, Warning, TEXT("NO LANDSCAPE")); return;}
 
-	// BREAKS THE LANDSCAPE!!
-	//_Landscape->PreEditUndo();
-
+	// Empty the spline array, ready to be populated
 	_SplineSegments.Empty();
 
+	// Loop through all ULandscapeSplineSegments in the level
 	TArray<TWeakObjectPtr<ULandscapeSplineSegment>> Segments;
 	for(TObjectIterator<ULandscapeSplineSegment> Itr; Itr; ++Itr)
 	{
@@ -34,17 +35,19 @@ void APCGLandscapeSettings::UpdateLandscapeSplineMeshes()
 	}
 	for (auto LandscapeSplineSegment : Segments)
 	{
+		// Validate and add validated ones to spline array
 		if(LandscapeSplineSegment.IsValid())
 		{
 			_SplineSegments.Add(*LandscapeSplineSegment);
 		}
 	}
 
-	// if has more than 2 connections, dont change so that can add not so modular junctions :)
+	// Loop through new, validated array
 	for (auto LandscapeSplineSegment : _SplineSegments)
 	{
 		LandscapeSplineSegment->SplineMeshes.Empty();
 
+		// Apply appropriate mesh and update the mesh on the segment
 		if(!_ShowLCurb && !_ShowRCurb)
 		{
 			LandscapeSplineSegment->SplineMeshes.Add(CreateMeshEntry(_RoadMesh));
@@ -67,6 +70,7 @@ void APCGLandscapeSettings::UpdateLandscapeSplineMeshes()
 		}
 	}
 
+	// Create a timer for updating the whole landscape as it is required for some reason
 	FTimerHandle CallPostEditMove;
 
 	GetWorld()->GetTimerManager().SetTimer(CallPostEditMove, this, &APCGLandscapeSettings::CallPostEditMove, 0.5f, false);
@@ -74,18 +78,18 @@ void APCGLandscapeSettings::UpdateLandscapeSplineMeshes()
 
 void APCGLandscapeSettings::UpdateForestMeshes()
 {
+	// Create an FPCGMeshSelectorWeightedEntry for the tree meshes as it is required for the PCG Static Mesh Spawner
 	MeshEntries.Empty();
 	for (int i = 0; i < _TreeMeshes.Num(); ++i)
 	{
 		MeshEntries.Add(FPCGMeshSelectorWeightedEntry(_TreeMeshes[i], 1));
 		UE_LOG(LogTemp, Warning, TEXT("adding %s"), *MeshEntries[i].DisplayName.ToString());
 	}
-
-	//_PCGVolume->PCGComponent.
 }
 
 void APCGLandscapeSettings::CallPostEditMove()
 {
+	// Update Landscape after delay
 	_Landscape->PostEditMove(true);
 
 	UE_LOG(LogTemp, Warning, TEXT("UPDATING"));
@@ -93,6 +97,8 @@ void APCGLandscapeSettings::CallPostEditMove()
 
 FLandscapeSplineMeshEntry APCGLandscapeSettings::CreateMeshEntry(UStaticMesh* Mesh)
 {
+	// Adjust specific data here if required
+	// TODO: Potentially add a FLandscapeSplineMeshEntry struct to add these settings to this manager and automatically apply them here?
 	FLandscapeSplineMeshEntry data;
 
 	// Change other data here!

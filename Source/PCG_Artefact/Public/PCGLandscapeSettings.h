@@ -6,8 +6,6 @@
 #include "GameFramework/Actor.h"
 #include "PCGLandscapeSettings.generated.h"
 
-
-
 class ALandscape;
 class ULandscapeSplineSegment;
 class ULandscapeComponent;
@@ -25,9 +23,11 @@ public:
 	// Sets default values for this actor's properties
 	APCGLandscapeSettings();
 
+#pragma region Functions
 	UFUNCTION(CallInEditor, Category = "Spline Component")
 	void UpdateLandscapeSplineMeshes();
 
+	// DEPRECATED
 	UFUNCTION(CallInEditor, Category = "Spline Component")
 	void UpdateForestMeshes();
 
@@ -36,14 +36,13 @@ public:
 
 	UFUNCTION()
 	FLandscapeSplineMeshEntry CreateMeshEntry(UStaticMesh* Mesh);
-
-	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Spline Component")
-	
+#pragma endregion
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	
+
+#pragma region Variables
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spline Component | Settings")
 	bool _ShowLCurb;
 
@@ -83,7 +82,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Spline Component | Setup")
 	TArray<TObjectPtr<ULandscapeSplineSegment>> _SplineSegments;
 	
-	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category= "Spline Component | Setup")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Spline Component | Setup")
 	TObjectPtr<APCGVolume> _PCGVolume;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
@@ -91,7 +90,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spline Component | Setup")
 	TSoftObjectPtr<UStaticMesh> _Mesh;
-	
+#pragma endregion	
 
 public:	
 	// Called every frame
